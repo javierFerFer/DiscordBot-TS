@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const ytdl_core_1 = __importDefault(require("ytdl-core"));
-const config_json_1 = __importDefault(require("./config.json"));
 const dotenv_1 = require("dotenv");
+const Music_1 = require("./Music");
+const botCommands_json_1 = __importDefault(require("./botCommands.json"));
 // Load enviroment variable to access token
 dotenv_1.config();
 const client = new discord_js_1.Client();
@@ -26,9 +26,11 @@ client.on('ready', () => {
 });
 client.on('message', (message) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
-    if (message.content.startsWith(config_json_1.default.playMusic)) {
-        var youtubeURL = (_a = message.toString().split(config_json_1.default.playMusic).pop()) === null || _a === void 0 ? void 0 : _a.trim();
-        const connect = yield ((_c = (_b = message.member) === null || _b === void 0 ? void 0 : _b.voice.channel) === null || _c === void 0 ? void 0 : _c.join());
-        connect === null || connect === void 0 ? void 0 : connect.play(ytdl_core_1.default(youtubeURL, { filter: 'audioonly' }));
+    if (message.content.startsWith(botCommands_json_1.default.playMusic)) {
+        var youtubeURL = (_a = message.toString().split(botCommands_json_1.default.playMusic).pop()) === null || _a === void 0 ? void 0 : _a.trim();
+        const connection = yield ((_c = (_b = message.member) === null || _b === void 0 ? void 0 : _b.voice.channel) === null || _c === void 0 ? void 0 : _c.join());
+        var MusicController = new Music_1.Music(youtubeURL, connection);
+        /* const connect = await message.member?.voice.channel?.join();
+        connect?.play(ytdl(youtubeURL, {filter: 'audioonly'})); */
     }
 }));

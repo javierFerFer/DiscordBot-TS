@@ -1,8 +1,8 @@
 import { Client } from "discord.js";
-import ytdl from "ytdl-core";
-import botComands from './config.json';
 import {config} from 'dotenv';
-import { stringify } from "querystring";
+import { Music } from "./Music";
+
+import botComands from './botCommands.json';
 
 // Load enviroment variable to access token
 config();
@@ -19,8 +19,9 @@ client.on('ready', () =>{
 client.on('message', async message =>{
     if (message.content.startsWith(botComands.playMusic)) {
         var youtubeURL : string = message.toString().split(botComands.playMusic).pop()?.trim()!;
-        const connect = await message.member?.voice.channel?.join();
-        connect?.play(ytdl(youtubeURL, {filter: 'audioonly'}));
+        const connection = await message.member?.voice.channel?.join();
+
+        var MusicController = new Music(youtubeURL, connection!);
     }
 });
 

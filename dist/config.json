@@ -1,3 +1,4 @@
 {
-    "playMusic": "!!play"
+    "playList": "playlist?list=",
+    "http": "https://www.youtube.com/playlist?list="
 }
