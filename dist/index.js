@@ -30,7 +30,5 @@ client.on('message', (message) => __awaiter(void 0, void 0, void 0, function* ()
         var youtubeURL = (_a = message.toString().split(botCommands_json_1.default.playMusic).pop()) === null || _a === void 0 ? void 0 : _a.trim();
         const connection = yield ((_c = (_b = message.member) === null || _b === void 0 ? void 0 : _b.voice.channel) === null || _c === void 0 ? void 0 : _c.join());
         var MusicController = new Music_1.Music(youtubeURL, connection);
-        /* const connect = await message.member?.voice.channel?.join();
-        connect?.play(ytdl(youtubeURL, {filter: 'audioonly'})); */
     }
 }));

@@ -23,7 +23,6 @@ export class Music {
         if (this.ytURL.includes(urlElements.playList)) {
 
             const PLAY_LIST_ID: string = this.ytURL.toString().split(urlElements.http).pop()?.trim()!;
-            const CHANNEL_ID = 'UCQCaS3atWyNHEy5PkDXdpNg'
             
             const config = {
                 GOOGLE_API_KEY: process.env.YT_TOKEN, // require
@@ -34,7 +33,6 @@ export class Music {
          
             ps.getPlaylistItems(PLAY_LIST_ID)
             .then((result: any) => {
-                console.log(result);
 
             for (let i = 0; i < result.items.length; i++) {
                 var videoInfo = result.items[i];
@@ -56,16 +54,23 @@ export class Music {
 
     playSingleSong(){
         this.connection.play(ytdl(this.ytURL, {filter: 'audioonly'}));
+        // Show actual song
     }
 
     playList(counter: any){
         var videoName = Array.from(this.playListMap.keys())[counter];
         var url: string = this.playListMap.get(videoName)!;
+
+        // Show list of songs
+
         this.playSongWithUrl(url);
     }
 
     playSongWithUrl(url: string){
         this.connection.play(ytdl(url, {filter: 'audioonly'}));
+
+        // Show actual Song
+
         this.connection.dispatcher.on('finish', () => {
             this.counterYtList += 1;
             if (this.counterYtList < this.playListMap.size) {
