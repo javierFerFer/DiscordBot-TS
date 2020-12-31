@@ -14,21 +14,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const dotenv_1 = require("dotenv");
-const Music_1 = require("./Music");
+const YoutubeMusicController_1 = require("./YoutubeMusicController");
 const botCommands_json_1 = __importDefault(require("./botCommands.json"));
+const config_json_1 = __importDefault(require("./config.json"));
+const errorMessages_json_1 = __importDefault(require("./errorMessages.json"));
 // Load enviroment variable to access token
 dotenv_1.config();
-const client = new discord_js_1.Client();
+const CLIENT = new discord_js_1.Client();
 // token here
-client.login(process.env.BOT_TOKEN);
-client.on('ready', () => {
+CLIENT.login(process.env.BOT_TOKEN);
+CLIENT.on('ready', () => {
     console.log("Bot is ready!");
 });
-client.on('message', (message) => __awaiter(void 0, void 0, void 0, function* () {
+CLIENT.on('message', (message) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
-    if (message.content.startsWith(botCommands_json_1.default.playMusic)) {
-        var youtubeURL = (_a = message.toString().split(botCommands_json_1.default.playMusic).pop()) === null || _a === void 0 ? void 0 : _a.trim();
-        const connection = yield ((_c = (_b = message.member) === null || _b === void 0 ? void 0 : _b.voice.channel) === null || _c === void 0 ? void 0 : _c.join());
-        var MusicController = new Music_1.Music(youtubeURL, connection);
+    try {
+        if (message.content.startsWith(botCommands_json_1.default.playMusic)) {
+            if (message.toString().includes(config_json_1.default.httpYoutube)) {
+                var youtubeURL = (_a = message.toString().split(botCommands_json_1.default.playMusic).pop()) === null || _a === void 0 ? void 0 : _a.trim();
+                var connection = yield ((_c = (_b = message.member) === null || _b === void 0 ? void 0 : _b.voice.channel) === null || _c === void 0 ? void 0 : _c.join());
+                if (connection != undefined) {
+                    var MusicController = new YoutubeMusicController_1.YoutubeMusicController(youtubeURL, connection, message);
+                }
+                else {
+                    message.channel.send(errorMessages_json_1.default.noChannelVoice);
+                }
+            }
+            else {
+                message.channel.send(errorMessages_json_1.default.NoYTUrl);
+            }
+        }
+    }
+    catch (error) {
+        //console.log(error);
+        message.channel.send(errorMessages_json_1.default.noChannelVoice);
     }
 }));

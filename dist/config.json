@@ -1,4 +1,6 @@
 {
     "playList": "playlist?list=",
-    "http": "https://www.youtube.com/playlist?list="
+    "httpPlayList": "https://www.youtube.com/playlist?list=",
+    "httpPlaySingleSong": "https://www.youtube.com/watch?v=",
+    "httpYoutube": "https://www.youtube.com/"
 }

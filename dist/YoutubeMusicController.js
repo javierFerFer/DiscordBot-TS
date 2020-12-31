@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Music = void 0;
+exports.YoutubeMusicController = void 0;
 const discord_js_1 = require("discord.js");
 const ytdl_core_1 = __importDefault(require("ytdl-core"));
 const config_json_1 = __importDefault(require("./config.json"));
@@ -11,7 +11,7 @@ const errorMessages_json_1 = __importDefault(require("./errorMessages.json"));
 const PLAYLIST = require('youtube-playlist-summary');
 const discordChangeTextElements_json_1 = __importDefault(require("./discordChangeTextElements.json"));
 const GET_YOUTUBLE_TITLE_VIDEO = require('get-youtube-title');
-class Music {
+class YoutubeMusicController {
     constructor(ytURLParam, connectionParam, messageParam) {
         this.ytURL = ytURLParam;
         this.connection = connectionParam;
@@ -44,6 +44,9 @@ class Music {
                         // Error mensaje playList empty
                         this.message.channel.send(errorMessages_json_1.default.PlayListEmptyError);
                     }
+                })
+                    .catch((error) => {
+                    this.message.channel.send(errorMessages_json_1.default.noProcessUrlMusic);
                 });
             }
             else {
@@ -51,7 +54,6 @@ class Music {
             }
         }
         catch (error) {
-            console.log(error);
             this.message.channel.send(errorMessages_json_1.default.noProcessUrlMusic);
         }
     }
@@ -116,4 +118,4 @@ class Music {
         });
     }
 }
-exports.Music = Music;
+exports.YoutubeMusicController = YoutubeMusicController;

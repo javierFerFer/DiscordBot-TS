@@ -1,0 +1,9 @@
+{
+    "bold": "**",
+    "cursive": "*",
+    "boldCursive":"***",
+    "list": "```",
+    "pointList": "• ",
+    "musicNow": "Playing Now: ",
+    "ListMusicYT": "BackGround Music:"
+}

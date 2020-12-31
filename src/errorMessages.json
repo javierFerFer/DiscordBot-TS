@@ -1,0 +1,6 @@
+{
+    "noChannelVoice": "First, enter to voice channel to play some music!",
+    "NoYTUrl": "URL about YouTube not detected!",
+    "noProcessUrlMusic": "Error processing YouTube URL for music",
+    "PlayListEmptyError": "The PlayList is empty!"
+}
