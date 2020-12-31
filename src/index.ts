@@ -6,6 +6,7 @@ import botComands from './botCommands.json';
 import URLOptions from './config.json';
 import errorMessages from './errorMessages.json';
 
+var MusicController: YoutubeMusicController;
 
 // Load enviroment variable to access token
 config();
@@ -26,7 +27,7 @@ CLIENT.on('message', async message =>{
                 var youtubeURL : string = message.toString().split(botComands.playMusic).pop()?.trim()!;
                 var connection = await message.member?.voice.channel?.join();
                 if (connection != undefined) {
-                    var MusicController = new YoutubeMusicController(youtubeURL, connection!, message);
+                    MusicController = new YoutubeMusicController(youtubeURL, connection!, message);
                 }else{
                     message.channel.send(errorMessages.noChannelVoice);
                 }
@@ -34,8 +35,20 @@ CLIENT.on('message', async message =>{
                 message.channel.send(errorMessages.NoYTUrl);
             }
         }
+        // Stop music
+        if (message.content.startsWith("!!stop")) {
+            if (MusicController != null) {
+                MusicController.stopDispatcher();
+            }
+        }
+
+        // resume music
+        if (message.content.startsWith("!!continue")) {
+            if (MusicController != null) {
+                MusicController.resumeDispatcher();
+            }
+        }
     } catch (error) {
-        //console.log(error);
         message.channel.send(errorMessages.noChannelVoice);
     }
 });

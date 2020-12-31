@@ -1,16 +1,14 @@
-import { ColorResolvable, Message, MessageEmbed, VoiceConnection } from "discord.js";
-import { totalmem } from "os";
+import {ColorResolvable, Message, MessageEmbed, StreamDispatcher, VoiceConnection } from "discord.js";
 import ytdl from "ytdl-core";
 import urlElements from './config.json';
 import errorMessages from './errorMessages.json';
 
 const PLAYLIST = require('youtube-playlist-summary');
 import textElements from './discordChangeTextElements.json';
-import { title } from "process";
 const GET_YOUTUBLE_TITLE_VIDEO = require('get-youtube-title');
 
 export class YoutubeMusicController {
-    
+    dispatcher!: StreamDispatcher;
     ytURL: string;
     counterYtList: any;
     connection: VoiceConnection;
@@ -26,6 +24,18 @@ export class YoutubeMusicController {
         this.playListTitleUrl = new Map();
 
         this.processURL();
+    }
+
+    stopDispatcher(){
+        if (this.dispatcher != null) {
+            this.dispatcher.pause();
+        }
+    }
+
+    resumeDispatcher(){
+        if (this.dispatcher != null) {
+            this.dispatcher.resume();
+        }
     }
 
     processURL(){
@@ -92,7 +102,7 @@ export class YoutubeMusicController {
     }
 
     playSingleSong(){
-        this.connection.play(ytdl(this.ytURL, {filter: 'audioonly'}));
+        this.dispatcher = this.connection.play(ytdl(this.ytURL, {filter: 'audioonly'}));
         // Show actual song
         this.showTitleSongWithURL();
     }
@@ -123,11 +133,10 @@ export class YoutubeMusicController {
     }
 
     playSongWithUrl(url: string){
-        this.connection.play(ytdl(url, {filter: 'audioonly'}));
-
+        this.dispatcher = this.connection.play(ytdl(url, {filter: 'audioonly'}));
         // Show actual Song
 
-        this.connection.dispatcher.on('finish', () => {
+        this.dispatcher = this.connection.dispatcher.on('finish', () => {
             this.counterYtList += 1;
             if (this.counterYtList < this.playListTitleUrl.size) {
                 this.playList(this.counterYtList); 

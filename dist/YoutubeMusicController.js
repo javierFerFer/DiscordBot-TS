@@ -20,6 +20,16 @@ class YoutubeMusicController {
         this.playListTitleUrl = new Map();
         this.processURL();
     }
+    stopDispatcher() {
+        if (this.dispatcher != null) {
+            this.dispatcher.pause();
+        }
+    }
+    resumeDispatcher() {
+        if (this.dispatcher != null) {
+            this.dispatcher.resume();
+        }
+    }
     processURL() {
         var _a;
         try {
@@ -77,7 +87,7 @@ class YoutubeMusicController {
         this.message.channel.send(embed);
     }
     playSingleSong() {
-        this.connection.play(ytdl_core_1.default(this.ytURL, { filter: 'audioonly' }));
+        this.dispatcher = this.connection.play(ytdl_core_1.default(this.ytURL, { filter: 'audioonly' }));
         // Show actual song
         this.showTitleSongWithURL();
     }
@@ -105,9 +115,9 @@ class YoutubeMusicController {
         this.playSongWithUrl(url);
     }
     playSongWithUrl(url) {
-        this.connection.play(ytdl_core_1.default(url, { filter: 'audioonly' }));
+        this.dispatcher = this.connection.play(ytdl_core_1.default(url, { filter: 'audioonly' }));
         // Show actual Song
-        this.connection.dispatcher.on('finish', () => {
+        this.dispatcher = this.connection.dispatcher.on('finish', () => {
             this.counterYtList += 1;
             if (this.counterYtList < this.playListTitleUrl.size) {
                 this.playList(this.counterYtList);

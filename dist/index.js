@@ -18,6 +18,7 @@ const YoutubeMusicController_1 = require("./YoutubeMusicController");
 const botCommands_json_1 = __importDefault(require("./botCommands.json"));
 const config_json_1 = __importDefault(require("./config.json"));
 const errorMessages_json_1 = __importDefault(require("./errorMessages.json"));
+var MusicController;
 // Load enviroment variable to access token
 dotenv_1.config();
 const CLIENT = new discord_js_1.Client();
@@ -34,7 +35,7 @@ CLIENT.on('message', (message) => __awaiter(void 0, void 0, void 0, function* ()
                 var youtubeURL = (_a = message.toString().split(botCommands_json_1.default.playMusic).pop()) === null || _a === void 0 ? void 0 : _a.trim();
                 var connection = yield ((_c = (_b = message.member) === null || _b === void 0 ? void 0 : _b.voice.channel) === null || _c === void 0 ? void 0 : _c.join());
                 if (connection != undefined) {
-                    var MusicController = new YoutubeMusicController_1.YoutubeMusicController(youtubeURL, connection, message);
+                    MusicController = new YoutubeMusicController_1.YoutubeMusicController(youtubeURL, connection, message);
                 }
                 else {
                     message.channel.send(errorMessages_json_1.default.noChannelVoice);
@@ -44,9 +45,20 @@ CLIENT.on('message', (message) => __awaiter(void 0, void 0, void 0, function* ()
                 message.channel.send(errorMessages_json_1.default.NoYTUrl);
             }
         }
+        // Stop music
+        if (message.content.startsWith("!!stop")) {
+            if (MusicController != null) {
+                MusicController.stopDispatcher();
+            }
+        }
+        // resume music
+        if (message.content.startsWith("!!continue")) {
+            if (MusicController != null) {
+                MusicController.resumeDispatcher();
+            }
+        }
     }
     catch (error) {
-        //console.log(error);
         message.channel.send(errorMessages_json_1.default.noChannelVoice);
     }
 }));
