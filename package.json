@@ -18,7 +18,7 @@
     "ffmpeg-static": "^4.2.7",
     "get-youtube-title": "^1.0.1",
     "youtube-playlist-summary": "^2.1.4",
-    "ytdl-core": "^4.2.1"
+    "ytdl-core": "^4.3.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.16",

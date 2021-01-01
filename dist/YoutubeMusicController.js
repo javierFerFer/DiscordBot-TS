@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -87,14 +96,25 @@ class YoutubeMusicController {
         this.message.channel.send(embed);
     }
     playSingleSong() {
-        this.dispatcher = this.connection.play(ytdl_core_1.default(this.ytURL, { filter: 'audioonly' }));
-        // Show actual song
-        this.showTitleSongWithURL();
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const PLAY_LIST_ID = (_a = this.ytURL.toString().split(config_json_1.default.httpPlaySingleSong).pop()) === null || _a === void 0 ? void 0 : _a.trim();
+            let info = yield ytdl_core_1.default.getInfo(PLAY_LIST_ID)
+                .then((info) => {
+                const format = ytdl_core_1.default.chooseFormat(info.formats, { quality: [128, 127, 120, 96, 95, 94, 93] });
+                this.dispatcher = this.connection.play(format.url);
+                this.showTitleSongWithURL();
+            })
+                .catch(() => {
+                this.dispatcher = this.connection.play(ytdl_core_1.default(this.ytURL, { filter: 'audioonly' }));
+                // Show actual song
+                this.showTitleSongWithURL();
+            });
+        });
     }
     showTitleSongWithURL() {
         var _a;
         const PLAY_LIST_ID = (_a = this.ytURL.toString().split(config_json_1.default.httpPlaySingleSong).pop()) === null || _a === void 0 ? void 0 : _a.trim();
-        var title;
         var tempMessage = this.message;
         GET_YOUTUBLE_TITLE_VIDEO(PLAY_LIST_ID, function (error, title) {
             const embed = new discord_js_1.MessageEmbed()

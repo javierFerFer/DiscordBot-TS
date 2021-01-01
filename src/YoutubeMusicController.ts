@@ -101,15 +101,23 @@ export class YoutubeMusicController {
             this.message.channel.send(embed);
     }
 
-    playSingleSong(){
-        this.dispatcher = this.connection.play(ytdl(this.ytURL, {filter: 'audioonly'}));
-        // Show actual song
-        this.showTitleSongWithURL();
+    async playSingleSong(){
+        const PLAY_LIST_ID: string = this.ytURL.toString().split(urlElements.httpPlaySingleSong).pop()?.trim()!;
+        let info = await ytdl.getInfo(PLAY_LIST_ID)
+        .then((info) => {
+            const format = ytdl.chooseFormat(info.formats, { quality: [128,127,120,96,95,94,93] });
+            this.dispatcher = this.connection.play(format.url);
+            this.showTitleSongWithURL();
+        })
+        .catch(() => {
+            this.dispatcher = this.connection.play(ytdl(this.ytURL, {filter: 'audioonly'}));
+            // Show actual song
+            this.showTitleSongWithURL();
+        }); 
     }
 
     showTitleSongWithURL(){
         const PLAY_LIST_ID: string = this.ytURL.toString().split(urlElements.httpPlaySingleSong).pop()?.trim()!;
-        var title: string;
         var tempMessage: Message = this.message;
         GET_YOUTUBLE_TITLE_VIDEO(PLAY_LIST_ID, function (error: string, title: string) {
             const embed = new MessageEmbed()
